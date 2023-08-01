@@ -33,8 +33,7 @@ public class AnswerController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/create/{id}")
-    public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm,
-            BindingResult bindingResult, Principal principal) {
+    public String createAnswer(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
         Question question = this.questionService.getQuestion(id);
         SiteUser siteUser = this.userService.getUser(principal.getName());
         if (bindingResult.hasErrors()) {
@@ -79,6 +78,15 @@ public class AnswerController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제권한이 없습니다.");
         }
         this.answerService.delete(answer);
+        return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/vote/{id}")
+    public String answerVote(Principal principal, @PathVariable("id") Integer id) {
+        Answer answer = this.answerService.getAnswer(id);
+        SiteUser siteUser = this.userService.getUser(principal.getName());
+        this.answerService.vote(answer, siteUser);
         return String.format("redirect:/question/detail/%s", answer.getQuestion().getId());
     }
 }

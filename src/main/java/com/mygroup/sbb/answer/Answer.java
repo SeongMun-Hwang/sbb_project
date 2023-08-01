@@ -12,6 +12,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Id;
 
+import java.util.Set;
+import jakarta.persistence.ManyToMany;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,4 +38,7 @@ public class Answer {
     private SiteUser author;
 
     private LocalDateTime modifyDate;
+
+    @ManyToMany
+    Set<SiteUser> voter;
 }
