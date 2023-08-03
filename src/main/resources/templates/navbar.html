@@ -7,13 +7,28 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a>
-                    <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/user/signup}">회원가입</a>
-                </li>
+                    <!--navbar dropdown-->
+                    <li class="nav-item dropdown">
+                    <button class="btn btn-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      유저
+                    </button>
+                    <ul class="dropdown-menu ">
+                      <li><a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/user/login}">로그인</a></li>
+                      <li><a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/user/logout}">로그아웃</a></li>
+                      <li><a class="nav-link" th:href="@{/user/signup}">회원가입</a></li>
+                    </ul>
+                  </li>
+                    <!--navbar dropdown-->
+                  <li class="nav-item dropdown">
+                    <button class="btn btn-white dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      Dropdown
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Action</a></li>
+                      <li><a class="dropdown-item" href="#">Another action</a></li>
+                      <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                  </li>
             </ul>
         </div>
     </div>
