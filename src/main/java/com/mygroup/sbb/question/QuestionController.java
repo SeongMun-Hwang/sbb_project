@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 import org.springframework.validation.BindingResult;
 
 import lombok.RequiredArgsConstructor;
+import com.mygroup.sbb.chatgpt.ChatGptMessageService;
 
 @RequestMapping("/question")
 @RequiredArgsConstructor
@@ -30,9 +31,10 @@ public class QuestionController {
 
     private final QuestionService questionService;
     private final UserService userService;
+    private final ChatGptMessageService chatGptMessageService;
 
     @GetMapping("/list")
-    public String list(Model model, @RequestParam(value="page", defaultValue="0") int page) {
+    public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Question> paging = this.questionService.getList(page);
         model.addAttribute("paging", paging);
         return "question_list";
@@ -59,6 +61,8 @@ public class QuestionController {
         }
         SiteUser siteUser = this.userService.getUser(principal.getName());
         this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
+        Question question = this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
+        this.chatGptMessageService.sendMessage(question);
         return "redirect:/question/list"; // 질문 저장후 질문목록으로 이동
     }
 
@@ -66,7 +70,7 @@ public class QuestionController {
     @GetMapping("/modify/{id}")
     public String questionModify(QuestionForm questionForm, @PathVariable("id") Integer id, Principal principal) {
         Question question = this.questionService.getQuestion(id);
-        if(!question.getAuthor().getUsername().equals(principal.getName())) {
+        if (!question.getAuthor().getUsername().equals(principal.getName())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정권한이 없습니다.");
         }
         questionForm.setSubject(question.getSubject());
@@ -76,7 +80,7 @@ public class QuestionController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/modify/{id}")
-    public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult, 
+    public String questionModify(@Valid QuestionForm questionForm, BindingResult bindingResult,
             Principal principal, @PathVariable("id") Integer id) {
         if (bindingResult.hasErrors()) {
             return "question_form";

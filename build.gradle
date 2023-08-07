@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.mygroup'
-version = '0.8.0'
+version = '1.0.0'
 
 java {
 	sourceCompatibility = '17'
@@ -35,8 +35,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.2.RELEASE'
 	implementation 'org.commonmark:commonmark:0.21.0'
+	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly group: 'com.mysql', name: 'mysql-connector-j', version: '8.0.33'
+	implementation 'org.json:json:20230227'
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
+
 
 tasks.named('test') {
 	useJUnitPlatform()
