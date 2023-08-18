@@ -9,13 +9,13 @@ COPY settings.gradle .
 COPY src src
 
 RUN ./gradlew build -x test
-RUN mkdir build/dependency && (cd build/dependency; jar -xf ../libs/sbb-1.0.0.jar)
-
+RUN mkdir build/extracted && (java -Djarmode=layertools -jar build/libs/sbb-1.0.0.jar extract --destination build/extracted)
 
 FROM eclipse-temurin:17-jdk-alpine
 VOLUME /tmp
-ARG DEPENDENCY=/workspace/app/build/dependency
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
-ENTRYPOINT ["java","-cp","app:app/lib/*","com.mygroup.sbb.SbbApplication"]
+ARG EXTRACTED=/workspace/app/build/extracted
+COPY --from=build ${EXTRACTED}/dependencies/ ./
+COPY --from=build ${EXTRACTED}/spring-boot-loader/ ./
+COPY --from=build ${EXTRACTED}/snapshot-dependencies/ ./
+COPY --from=build ${EXTRACTED}/application/ ./
+ENTRYPOINT ["java","org.springframework.boot.loader.JarLauncher"]
