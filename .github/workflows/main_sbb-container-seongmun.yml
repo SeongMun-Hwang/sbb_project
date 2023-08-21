@@ -26,6 +26,7 @@ jobs:
         username: ${{ secrets.AzureAppService_ContainerUsername_65ca256ac82943eaa3d2dbb52815154c }}
         password: ${{ secrets.AzureAppService_ContainerPassword_98becbbb67db425da97af47096f2b6c5 }}
 
+    - run : chmod 777 gradlew
     - name: Build and push container image to registry
       uses: docker/build-push-action@v3
       with:
