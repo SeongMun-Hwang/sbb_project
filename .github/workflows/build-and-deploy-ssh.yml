@@ -9,7 +9,7 @@ on:
     # 리스트 형태이기 때문에 여러개를 적어도 됩니다.
 
 env:
-  DOCKER_IMAGE: ghcr.io/${{ github.actor }}/sbb
+  DOCKER_IMAGE: ghcr.io/seongmun-hwang/sbb
   VERSION: ${{ github.sha }}
   CONTAINER_NAME: sbb
   GHCR_TOKEN: ${{ secrets.GHCR_TOKEN }}
